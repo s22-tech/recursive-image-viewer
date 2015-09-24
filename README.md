@@ -7,5 +7,6 @@ This can be used as a stand alone application for viewing images or if you are a
 
 # Demo:
 See http://tom-gould.co.uk/recursive-image-viewer/
+
 See http://tom-gould.co.uk/recursive-image-viewer/?dir=../sites/tom-gould.co.uk/files
 
