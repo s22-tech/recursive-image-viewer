@@ -61,11 +61,15 @@ function get_images_recursive($dir, $images = array()) {
     <script src="jquery-1.11.3.min.js"></script>
     <script src="jquery.lazyload.js"></script>
     <style type="text/css">
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+      }
       img {
         max-width: 200px;
       }
       .photo {
-        float: left;
+        max-width: 200px;
         margin: 12px;
         border: 1px solid #ccc;
         padding: 25px;
@@ -87,7 +91,7 @@ function get_images_recursive($dir, $images = array()) {
     <meta name="viewport" content="width=device-width">
   </head>
   <body>
-    <div>
+    <div class="container">
       <?php
       if (!empty($_GET['dir'])) {
         // fetch image details
