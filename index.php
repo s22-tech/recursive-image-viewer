@@ -7,26 +7,25 @@
  *     The image types to look for
  * @param string $dir
  *     The directory to scan
- * @param string $cur_path
- *     The current directory being scanned
  * @param array $images
  *     An array to hold the images
  *
  * @return array
  *     The Images
  */
-function get_images_recursive($dir, $cur_path = __DIR__, $images = array()) {
+function get_images_recursive($dir, $images = array()) {
   global $types;
 
   // filetypes to display
-  $types = array("image/jpeg", "image/gif", "image/png");
+  $types = array("jpeg", "gif", "png");
 
   // add trailing slash if missing
   if (substr($dir, -1) != "/") {
     $dir .= "/";
   }
 
-  $d    = @dir($dir) or die("get_images_recursive: Failed opening directory $dir for reading");
+  $d = dir($dir) or die("get_images_recursive: Failed opening directory $dir for reading");
+
   while (false !== ($item = $d->read())) {
     // skip hidden files
     if ($item[0] == ".") {
@@ -34,23 +33,20 @@ function get_images_recursive($dir, $cur_path = __DIR__, $images = array()) {
     }
 
     if (is_dir($dir . $item)) {
-      $this_dir = get_images_recursive($dir . $item, $dir);
+      $this_dir = get_images_recursive($dir . $item);
       $images   = array_merge($images, $this_dir);
     }
 
     // check for image files
     $path     = $dir . $item;
-    $f        = escapeshellarg($dir . $item);
-    $mimetype = trim(`file -bi $f`);
-    foreach ($types as $valid_type) {
-      if (preg_match("@^{$valid_type}@", $mimetype)) {
-        $images[] = array(
-          'path' => $path,
-          'file' => "/" . $dir . $item,
-          'size' => getimagesize($dir . $item)
-        );
-        break;
-      }
+    $mimetype = pathinfo($path, PATHINFO_EXTENSION);
+
+    if (in_array($mimetype, $types)) {
+      $images[] = array(
+        'path' => $path,
+        'file' => "/" . $dir . $item,
+        'size' => getimagesize($dir . $item)
+      );
     }
   }
   $d->close();
@@ -96,7 +92,8 @@ function get_images_recursive($dir, $cur_path = __DIR__, $images = array()) {
       if (!empty($_GET['dir'])) {
         // fetch image details
         $images = get_images_recursive($_GET['dir']);
-        $ratio  = 0.3;
+
+        $ratio = 0.3;
         foreach ($images as $img) {
           $width  = $img['size'][0] * $ratio;
           $height = $img['size'][1] * $ratio;
