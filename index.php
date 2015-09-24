@@ -3,6 +3,14 @@
 /**
  * Recursivley scans a directory and returns an array of the images within
  *
+ * This can be used as a stand alone application for viewing images or if you
+ * are a web developer you can put this in the root of your site and easily
+ * ahve a way to search all the images on your site from one page.
+ *
+ * Demo:
+ * See http://tom-gould.co.uk/recursive-image-viewer/
+ * See http://tom-gould.co.uk/recursive-image-viewer/?dir=../sites/tom-gould.co.uk/files
+ *
  * @global array $types
  *     The image types to look for
  * @param string $dir
@@ -66,10 +74,10 @@ function get_images_recursive($dir, $images = array()) {
         flex-wrap: wrap;
       }
       img {
-        max-width: 200px;
+        max-width: 300px;
       }
       .photo {
-        max-width: 200px;
+        max-width: 300px;
         margin: 12px;
         border: 1px solid #ccc;
         padding: 25px;
