@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Recursivley scans a directory and returns an array of the images within
+ * Recursively scans a directory and returns an array of the images within
  *
  * This can be used as a stand alone application for viewing images or if you
  * are a web developer you can put this in the root of your site and easily
