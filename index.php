@@ -25,7 +25,7 @@ function get_images_recursive($dir, $images = array()) {
   global $types;
 
   // filetypes to display
-  $types = array("jpeg", "gif", "png");
+  $types = array("jpeg", "jpg", "gif", "png");
 
   // add trailing slash if missing
   if (substr($dir, -1) != "/") {
@@ -49,7 +49,7 @@ function get_images_recursive($dir, $images = array()) {
     $path     = $dir . $item;
     $mimetype = pathinfo($path, PATHINFO_EXTENSION);
 
-    if (in_array($mimetype, $types)) {
+    if (in_array(strtolower($mimetype), $types)) {
       $images[] = array(
         'path' => $path,
         'file' => "/" . $dir . $item,
@@ -60,6 +60,7 @@ function get_images_recursive($dir, $images = array()) {
   $d->close();
 
   return $images;
+
 }
 ?>
 <!DOCTYPE html>
@@ -101,9 +102,30 @@ function get_images_recursive($dir, $images = array()) {
   <body>
     <div class="container">
       <?php
+      $output = NULL;
       if (!empty($_GET['dir'])) {
+
+        $dir = $_GET['dir'];
+        // add trailing slash if missing
+        if (substr($dir, -1) != "/") {
+          $dir .= "/";
+        }
+
+        $d    = dir($dir) or die("get_images_recursive: Failed opening directory $dir for reading");
+        $output .= "<ul>";
+        while (false !== ($item = $d->read())) {
+          // skip hidden files
+          if ($item[0] == ".") {
+            continue;
+          }
+          if (is_dir($dir . $item)) {
+            $output .= "<li><a href=\"?dir=$dir$item\">images from /$dir$item</a></li>";
+          }
+        }
+        $output .= "</ul>";
+
         // fetch image details
-        $images = get_images_recursive($_GET['dir']);
+        $images = get_images_recursive($dir);
 
         $ratio = 0.3;
         foreach ($images as $img) {
@@ -114,37 +136,41 @@ function get_images_recursive($dir, $images = array()) {
           // img class above in the CSS and add the following line to the image tag
           // width=\"{$width}\" height=\"{$height}\"
 
-          echo "<div class=\"photo\">";
-          echo "<a target=\"_blank\" href=\"{$img['path']}\">";
-          echo "<img class=\"lazy\" data-original=\"{$img['path']}\" alt=\"\"></a><br>\n";
+          $output .= "<div class=\"photo\">";
+          $output .= "<a target=\"_blank\" href=\"{$img['path']}\">";
+          $output .= "<img class=\"lazy\" data-original=\"{$img['path']}\" alt=\"\"></a><br>\n";
           // display image file name as link
-          echo "<a target=\"_blank\" href=\"{$img['path']}\">", basename($img['file']), "</a><br>\n";
+          $output .= "<a target=\"_blank\" href=\"{$img['path']}\">" . basename($img['file']) . "</a><br>\n";
           // display image dimenstions
-          echo "({$img['size'][0]} x {$img['size'][1]} pixels)<br>\n";
+          $output .= "({$img['size'][0]} x {$img['size'][1]} pixels)<br>\n";
           // display mime_type
-          echo $img['size']['mime'];
-          echo "</div>\n";
+          $output .= $img['size']['mime'];
+          $output .= "</div>\n";
         }
       }
       // Link to the directories
       else {
-        $d    = @dir(__DIR__) or die("get_images_recursive: Failed opening directory " . __DIR__ . " for reading");
-        echo "<ul>";
+        $d    = dir(__DIR__ . '/' . $dir) or die("get_images_recursive: Failed opening directory " . __DIR__ . '/' . $dir . " for reading");
+        $output .= "<ul>";
         while (false !== ($item = $d->read())) {
           // skip hidden files
           if ($item[0] == ".") {
             continue;
           }
           if (is_dir($dir . $item)) {
-            echo "<li><a href=\"?dir=$item\">images from /$item</a></li>";
+            $output .= "<li><a href=\"?dir=$item\">images from /$item</a></li>";
           }
         }
-        echo "</ul>";
+        $output .= "</ul>";
+      }
+
+      if (!empty($output)) {
+        print $output;
       }
       ?>
     </div>
     <script type="text/javascript" charset="utf-8">
-      $(function() {
+      $(function () {
         $("img.lazy").lazyload();
       });
     </script>
