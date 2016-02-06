@@ -164,6 +164,7 @@ function get_images_recursive($dir, $images = array()) {
         $output .= "</ul>";
       }
 
+      $output = str_replace('<ul></ul>', '', $output);
       if (!empty($output)) {
         print $output;
       }
