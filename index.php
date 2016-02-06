@@ -7,10 +7,6 @@
  * are a web developer you can put this in the root of your site and easily
  * ahve a way to search all the images on your site from one page.
  *
- * Demo:
- * See http://tom-gould.co.uk/recursive-image-viewer/
- * See http://tom-gould.co.uk/recursive-image-viewer/?dir=../sites/tom-gould.co.uk/files
- *
  * @global array $types
  *     The image types to look for
  * @param string $dir
