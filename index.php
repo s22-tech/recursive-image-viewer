@@ -40,7 +40,7 @@ function get_images_recursive($dir, $images = array()) {
       continue;
     }
 
-    if (is_dir($dir . $item)) {
+    if (is_dir($dir . $item) && isset($_GET['all'])) {
       $this_dir = get_images_recursive($dir . $item);
       $images   = array_merge($images, $this_dir);
     }
