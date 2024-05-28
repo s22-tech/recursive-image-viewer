@@ -1,4 +1,4 @@
-# recursive-image-viewer
+# Recursive Image Viewer
 A PHP script that recurses into directories and displays all the images within as a HTML page with links to the image file.
 
 Recursively scans a directory and returns an array of the images within
