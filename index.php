@@ -152,7 +152,8 @@
 			$dir .= '/';
 		}
 
-		$d = dir($dir) or die("get_images_recursive: Failed opening directory $dir for reading");
+		$d = dir($dir) 
+			or die("get_images_recursive 1: Failed opening directory $dir for reading");
 
 		while (($item = $d->read()) !== false) {
 		  // Skip hidden files.
