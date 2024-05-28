@@ -76,14 +76,14 @@
 			// width=\"{$width}\" height=\"{$height}\"
 
 			$output .= '<div class="photo">';
-			$output .= "<a target=\"_blank\" href=\"{$img['path']}\">";
+			$output .= '<a target="_blank" href="'. $img['path'] .'">';
 			$output .= '<img class="lazy" data-original="'.$img['path'].'" alt=""></a><br>' . PHP_EOL;
 			
 		  // Display image file name as link.
 			$output .= '<a target="_blank" href="'.$img['path'].'">' . basename($img['file']) . '</a><br>' . PHP_EOL;
 			
 		  // Display image dimenstions.
-			$output .= "({$img['size'][0]} x {$img['size'][1]} pixels)<br>" . PHP_EOL;
+			$output .= '('. $img['size'][0] .' x '. $img['size'][1] .' pixels)<br>' . PHP_EOL;
 			
 		  // Display mime_type.
 			$output .= $img['size']['mime'];
@@ -153,7 +153,7 @@
 		}
 
 		$d = dir($dir) 
-			or die("get_images_recursive 1: Failed opening directory $dir for reading");
+			or die("get_images_recursive: Failed opening directory $dir for reading");
 
 		while (($item = $d->read()) !== false) {
 		  // Skip hidden files.
