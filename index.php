@@ -1,3 +1,7 @@
+<?php
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -37,7 +41,7 @@
 	<body>
     <div class="container">
 <?php
-	$output = null;
+	$output = '';
 	if (!empty($_GET['dir'])) {
 		$dir = $_GET['dir'];
 	  // Add trailing slash if missing.
@@ -45,14 +49,15 @@
 			$dir .= '/';
 		}
 
-		$d = dir($dir) or die("get_images_recursive 1: Failed opening directory $dir for reading");
+		$d = dir($dir) 
+			or die("get_images_recursive 1: Failed opening directory $dir for reading");
 		$output .= '<ul>';
 		while (($item = $d->read()) !== false) {
 		  // Skip hidden files.
 			if ($item[0] == '.') {
 				continue;
 			}
-			if (is_dir($dir . $item)) {
+			if (is_dir(__DIR__ .'/'. $dir . $item)) {
 				$output .= '<li><a href="?dir='.$dir . $item .'"> View images in /'. $dir . $item .'</a></li>';
 			}
 		}
@@ -85,18 +90,17 @@
 			$output .= '</div>' . PHP_EOL;
 		}
 	}
-  // Link to the directories.
+  // Link to the main directories.
 	else {
-		$dir ??= '';
-		$d = dir(__DIR__ . '/' . $dir) or die('get_images_recursive 2: Failed opening directory ' . __DIR__ . '/' . $dir . ' for reading');
+		$d = dir(__DIR__ . '/') 
+			or die('get_images_recursive 2: Failed opening directory ' . __DIR__ . ' for reading');
 		$output .= '<ul>';
 		while (($item = $d->read()) !== false) {
 		  // Skip hidden files.
-			if ($item[0] == '.') {
-				continue;
-			}
-			if (is_dir($dir . $item)) {
-				$output .= '<li><a href="?dir='. $item .'"> View images in the '. $item .' folder.</a></li>';
+			if ($item[0] == '.') continue;
+
+			if (is_dir(__DIR__ .'/'. $item)) {
+				$output .= '<li><a href="?dir='. $item .'"> View images from the "'. $item .'" directory</a></li>';
 			}
 		}
 		$output .= '</ul>';
@@ -104,22 +108,19 @@
 
 	$output = str_replace('<ul></ul>', '', $output);
 	if (!empty($output)) {
-		print $output;
+		echo $output;
 }
 ?>
     </div>
-    <script charset="utf-8">
-      $(function () {
-        $('img.lazy').lazyload();
-      });
-    </script>
+<script charset="utf-8">
+	$(function () {
+		$('img.lazy').lazyload();
+	});
+</script>
   </body>
 </html>
 
 <?php
-
-	error_reporting(E_ALL);
-	ini_set('display_errors', 1);
 
 	/**
 	 * https://github.com/tomgould/recursive-image-viewer
@@ -155,11 +156,9 @@
 
 		while (($item = $d->read()) !== false) {
 		  // Skip hidden files.
-			if ($item[0] == '.') {
-				continue;
-			}
+			if ($item[0] == '.') continue;
 
-			if (is_dir($dir . $item) && isset($_GET['all'])) {
+			if (is_dir(__DIR__ .'/'. $dir . $item) && isset($_GET['all'])) {
 				$this_dir = get_images_recursive($dir . $item);
 				$images   = array_merge($images, $this_dir);
 			}
