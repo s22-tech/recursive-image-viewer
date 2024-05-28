@@ -87,7 +87,7 @@
 	}
   // Link to the directories.
 	else {
-		$dir ?? '';
+		$dir ??= '';
 		$d = dir(__DIR__ . '/' . $dir) or die('get_images_recursive 2: Failed opening directory ' . __DIR__ . '/' . $dir . ' for reading');
 		$output .= '<ul>';
 		while (($item = $d->read()) !== false) {
